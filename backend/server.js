@@ -17,15 +17,10 @@ import adminRoutes from './routes/adminRoutes.js';
 import { notFound } from './middleware/notFoundMiddleware.js';
 import { errorHandler } from './middleware/errorMiddleware.js';
 
-const envConfig = dotenv.config({
+dotenv.config({
   path: fileURLToPath(new URL('./.env', import.meta.url)),
+  override: false,
 });
-const mongoUriFromFile = envConfig.parsed?.MONGO_URI;
-if (mongoUriFromFile === undefined) {
-  delete process.env.MONGO_URI;
-} else {
-  process.env.MONGO_URI = mongoUriFromFile;
-}
 
 await connectDB();
 
