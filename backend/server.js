@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import { fileURLToPath } from 'node:url';
 import connectDB from './config/db.js';
 
 import authRoutes from './routes/authRoutes.js';
@@ -16,9 +17,17 @@ import adminRoutes from './routes/adminRoutes.js';
 import { notFound } from './middleware/notFoundMiddleware.js';
 import { errorHandler } from './middleware/errorMiddleware.js';
 
-dotenv.config();
+const envConfig = dotenv.config({
+  path: fileURLToPath(new URL('./.env', import.meta.url)),
+});
+const mongoUriFromFile = envConfig.parsed?.MONGO_URI;
+if (mongoUriFromFile === undefined) {
+  delete process.env.MONGO_URI;
+} else {
+  process.env.MONGO_URI = mongoUriFromFile;
+}
 
-connectDB();
+await connectDB();
 
 const app = express();
 
