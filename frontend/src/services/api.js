@@ -1,4 +1,5 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+const rawBaseUrl = (import.meta.env.VITE_API_URL || '/api').trim();
+const API_BASE_URL = rawBaseUrl.endsWith('/') ? rawBaseUrl.slice(0, -1) : rawBaseUrl;
 
 const getAuthHeader = () => {
   const token = localStorage.getItem('marketboard_token');
